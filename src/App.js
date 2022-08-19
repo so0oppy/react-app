@@ -3,7 +3,10 @@ import './App.css';
 function Header(props){
   console.log('props', props, props.title);
   return <header>
-    <h1><a href="/">{props.title}</a></h1>
+    <h1><a href="/" onClick={function(event){
+      event.preventDefault(); //클릭되어도 href값으로 이동하지 않도록 prevent
+      props.onChangeMode(); //alert를 넣은 onChangeMode함수 불러옴
+    }}>{props.title}</a></h1>
   </header>
 }
 function Nav(props){
@@ -33,7 +36,9 @@ function App() {
   ]
   return (
     <div>
-      <Header title="REACT"></Header>
+      <Header title="REACT" onChangeMode={function(){
+        alert('Header');
+      }}></Header>
       <Nav topics={topics}></Nav>
       <Article title="Welcome" body="Hello, WEB"></Article>
       <Article title="Hi" body="Hello, REACT"></Article>
