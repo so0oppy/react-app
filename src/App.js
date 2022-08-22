@@ -35,17 +35,34 @@ function Article(props){
     {props.body}
   </article>
 }
+function Create(props){
+  return <article>
+    <h2>Create</h2>
+    <form onSubmit={event=>{
+      event.preventDefault(); //page reload(원래 이벤트)막음
+      const title = event.target.title.value; //title의 value값을 가져올 수 있음
+      const body = event.target.body.value; //body의 value값을 가져올 수 있음
+      props.onCreate(title, body);
+    }}>
+      <p><input type="text" name="title" placeholder="title"/></p>
+      <p><textarea name="body" placeholder="body"></textarea></p>
+      <p><input type="submit" value="Create"></input></p>
+    </form>
+  </article>
+}
+
 function App() {
   // const _mode = useState('REACT');
   // const mode = _mode[0];
   // const setMode = _mode[1];
   const [mode, setMode] = useState('REACT'); //setMode는 state(setMode 외의 이름들도 가능)
-  const [id, setId] = useState('READ');
-  const topics = [
+  const [id, setId] = useState(null);
+  const [nextId, setNextId] = useState(4);//id값이 3까지이므로
+  const [topics, setTopics] = useState ([ //setTopics를 통해 읽기와 쓰기 인터페이스 추가
     {id:1, title:'html', body:'html is ...'},
     {id:2, title:'css', body:'css is ...'},
     {id:3, title:'javascript', body:'javascript is ...'}
-  ]
+  ]);
   let content = null;
   if(mode === 'REACT') {
     content = <Article title="Welcome" body="Hello, WEB"></Article>
@@ -58,6 +75,16 @@ function App() {
       }
     }
     content = <Article title={title} body={body}></Article>
+  } else if(mode === 'CREATE'){
+    content = <Create onCreate={(_title, _body)=>{
+      const newTopic = {id:nextId, title:_title, body:_body}
+      const newTopics = [...topics]//topics를 복제한 복제본 만들어짐
+      newTopics.push(newTopic);//복제본에 push하여 복제본을 바꿈
+      setTopics(newTopics);//바꾼 복제본을 Topics로 전달 -> REACT는 topics와 복제본이 다르다면 그 때 컴포넌트 다시 렌더링함
+      setMode('READ'); //상세페이지 보기로 모드를 바꿈
+      setId(nextId); //다음 아이디로 미리 설정해둠
+      setNextId(nextId+1); //nextId도 +1로 바꿈
+    }}></Create>
   }
   return (
     <div>
@@ -69,6 +96,10 @@ function App() {
         setId(_id);
       }}></Nav>
       {content}
+      <a href="/create" onClick={event=>{
+        event.preventDefault();
+        setMode('CREATE');
+      }}>Create</a>
     </div>
   );
 }
