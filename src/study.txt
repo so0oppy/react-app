@@ -1,4 +1,5 @@
-import logo from './logo.svg';
+## App.js 로 공부한 내용
+
 import './App.css';
 import {useState} from 'react';
 
@@ -109,3 +110,6 @@ export default App;
 //Prop - Component를 사용하는 외부 사용자를 위한 데이터
 //State - Component를 만드는 내부자를 위한 데이터
 //Prop과 State에 따라 return값이 달라짐
+
+--------
+
